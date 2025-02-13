@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 from . import utils
 
+
 def find_vertex_cover(graph):
     """
     Computes an approximate vertex cover in polynomial time.
@@ -44,7 +45,7 @@ def find_vertex_cover_in_dense_graph(graph):
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         return None
 
-    approximate_vertex_cover = set()
+    vertex_cover = set()
     components = list(nx.connected_components(graph))
 
     while components:
@@ -56,27 +57,28 @@ def find_vertex_cover_in_dense_graph(graph):
                 # Use Hopcroft-Karp algorithm for bipartite graphs
                 bipartite_matching = nx.bipartite.hopcroft_karp_matching(subgraph)
                 bipartite_vertex_cover = nx.bipartite.to_vertex_cover(subgraph, bipartite_matching)
-                approximate_vertex_cover.update(bipartite_vertex_cover)
+                vertex_cover.update(bipartite_vertex_cover)
             elif subgraph.number_of_nodes()**2 >= subgraph.number_of_edges()**3:
-                approximate_vertex_cover.update(find_vertex_cover_in_sparse_graph(subgraph))            
+                vertex_cover.update(find_vertex_cover_in_sparse_graph(subgraph))            
             else:
                 # Use maximal matching for non-bipartite graphs
-                maximal_matching = nx.maximal_matching(subgraph)
-                candidate1 = {min(u, v) for u, v in maximal_matching}
-                candidate2 = {max(u, v) for u, v in maximal_matching}
-
-                # Choose the candidate with the higher total degree
-                if sum((subgraph.degree(u) - 1) for u in candidate1) >= sum((subgraph.degree(v) - 1) for v in candidate2):
-                    best_candidate = candidate1
-                else:
-                    best_candidate = candidate2
-
-                approximate_vertex_cover.update(best_candidate)
+                maximal_matching = nx.approximation.min_maximal_matching(subgraph)
+                best_candidate = {(u if (subgraph.degree(u) - 1) >= (subgraph.degree(v) - 1) else v)
+                                   for u, v in maximal_matching}
+                
+                vertex_cover.update(best_candidate)
 
                 # Remove the selected nodes and add the remaining components
                 residual_graph = subgraph.copy()
                 residual_graph.remove_nodes_from(best_candidate)
                 components.extend(nx.connected_components(residual_graph))
+
+    # Remove redundant vertices from the vertex cover
+    approximate_vertex_cover = set(vertex_cover)
+    for u in vertex_cover:
+        # Check if removing the vertex still results in a valid vertex cover
+        if utils.is_vertex_cover(graph, approximate_vertex_cover - {u}):
+            approximate_vertex_cover.remove(u)
 
     return approximate_vertex_cover
 
