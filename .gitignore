@@ -172,4 +172,6 @@ cython_debug/
 
 # user custom
 app.log
-sparse_matrix_*
+graphs/
+DIMACS_all_ascii/
+BHOSLIB_ascii/

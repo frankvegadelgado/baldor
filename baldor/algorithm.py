@@ -45,7 +45,7 @@ def find_vertex_cover_in_dense_graph(graph):
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         return None
 
-    vertex_cover = set()
+    approximate_vertex_cover = set()
     components = list(nx.connected_components(graph))
 
     while components:
@@ -53,32 +53,25 @@ def find_vertex_cover_in_dense_graph(graph):
         subgraph = graph.subgraph(component)
 
         if subgraph.number_of_edges() > 0:
-            if nx.is_bipartite(subgraph):
+            if nx.is_bipartite(subgraph) and subgraph.number_of_nodes()**1.5 >= subgraph.number_of_edges():
                 # Use Hopcroft-Karp algorithm for bipartite graphs
                 bipartite_matching = nx.bipartite.hopcroft_karp_matching(subgraph)
                 bipartite_vertex_cover = nx.bipartite.to_vertex_cover(subgraph, bipartite_matching)
-                vertex_cover.update(bipartite_vertex_cover)
+                approximate_vertex_cover.update(bipartite_vertex_cover)
             elif subgraph.number_of_nodes()**2 >= subgraph.number_of_edges()**3:
-                vertex_cover.update(find_vertex_cover_in_sparse_graph(subgraph))            
+                approximate_vertex_cover.update(find_vertex_cover_in_sparse_graph(subgraph))            
             else:
                 # Use maximal matching for non-bipartite graphs
                 maximal_matching = nx.approximation.min_maximal_matching(subgraph)
                 best_candidate = {(u if (subgraph.degree(u) - 1) >= (subgraph.degree(v) - 1) else v)
                                    for u, v in maximal_matching}
                 
-                vertex_cover.update(best_candidate)
+                approximate_vertex_cover.update(best_candidate)
 
                 # Remove the selected nodes and add the remaining components
                 residual_graph = subgraph.copy()
                 residual_graph.remove_nodes_from(best_candidate)
                 components.extend(nx.connected_components(residual_graph))
-
-    # Remove redundant vertices from the vertex cover
-    approximate_vertex_cover = set(vertex_cover)
-    for u in vertex_cover:
-        # Check if removing the vertex still results in a valid vertex cover
-        if utils.is_vertex_cover(graph, approximate_vertex_cover - {u}):
-            approximate_vertex_cover.remove(u)
 
     return approximate_vertex_cover
 
