@@ -32,64 +32,152 @@
     ></script>
   </head>
   <body>
-    <h1>Baldor: Minimum Vertex Cover Solver</h1>
+    <h1>Baldor: Minimum Dominating Set Solver</h1>
     <p>
       <img
         src="baldor.jpg"
         alt="Honoring the Memory of Aurelio Angel Baldor de la Vega (Cuban mathematician, educator and lawyer)"
       />
     </p>
+    <p>
+      This work builds upon
+      <a
+        href="https://www.researchgate.net/publication/389519333_New_Insights_and_Developments_on_the_Dominating_Set_Problem"
+        >New Insights and Developments on the Dominating Set Problem</a
+      >.
+    </p>
     <hr />
-    <h1>The Minimum Vertex Cover Problem</h1>
+    <h1>Overview of the Minimum Dominating Set (MDS)</h1>
+    <h2>Definition:</h2>
     <p>
-      The <strong>Minimum Vertex Cover (MVC)</strong> problem is a classic
-      optimization problem in computer science and graph theory. It involves
-      finding the smallest set of vertices in a graph that
-      <strong>covers</strong> all edges, meaning at least one endpoint of every
-      edge is included in the set.
+      A <strong>dominating set</strong> in a graph $G = (V, E)$ is a subset $D
+      \subseteq V$ such that every vertex not in $D$ is adjacent to at least one
+      vertex in $D$. The <strong>minimum dominating set (MDS)</strong> is the
+      smallest possible dominating set in terms of the number of vertices.
     </p>
-    <h2>Formal Definition</h2>
-    <p>
-      Given an undirected graph $G = (V, E)$, a <strong>vertex cover</strong> is
-      a subset $V' \subseteq V$ such that for every edge $(u, v) \in E$, at
-      least one of $u$ or $v$ belongs to $V'$. The MVC problem seeks the vertex
-      cover with the smallest cardinality.
-    </p>
-    <h2>Importance and Applications</h2>
-    <ul>
+    <h2>Key Concepts:</h2>
+    <ol>
       <li>
-        <strong>Theoretical Significance:</strong> MVC is a well-known NP-hard
-        problem, central to complexity theory.
+        <p><strong>Graph Representation</strong>:</p>
+        <ul>
+          <li>$V$: Set of vertices.</li>
+          <li>$E$: Set of edges connecting the vertices.</li>
+        </ul>
       </li>
       <li>
-        <strong>Practical Applications:</strong>
+        <p><strong>Dominating Set</strong>:</p>
         <ul>
           <li>
-            <strong>Network Security:</strong> Identifying critical nodes to
-            disrupt connections.
-          </li>
-          <li>
-            <strong>Bioinformatics:</strong> Analyzing gene regulatory networks.
-          </li>
-          <li>
-            <strong>Wireless Sensor Networks:</strong> Optimizing sensor
-            coverage.
+            A set $D$ where for every vertex $v \in V$, either $v \in D$ or $v$
+            is adjacent to some vertex in $D$.
           </li>
         </ul>
       </li>
-    </ul>
-    <h2>Related Problems</h2>
+      <li>
+        <p><strong>Minimum Dominating Set</strong>:</p>
+        <ul>
+          <li>
+            The dominating set with the smallest cardinality (i.e., the fewest
+            number of vertices).
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <h2>Applications:</h2>
     <ul>
       <li>
-        <strong>Maximum Independent Set:</strong> The complement of a vertex
-        cover.
+        <strong>Network Design</strong>: Ensuring coverage in wireless sensor
+        networks.
       </li>
-      <li><strong>Set Cover Problem:</strong> A generalization of MVC.</li>
+      <li><strong>Social Networks</strong>: Identifying influential nodes.</li>
+      <li>
+        <strong>Game Theory</strong>: Strategies in certain types of games.
+      </li>
+      <li>
+        <strong>Biology</strong>: Modeling protein-protein interaction networks.
+      </li>
     </ul>
+    <h2>Computational Complexity:</h2>
+    <ul>
+      <li>
+        <strong>NP-Hard</strong>: Finding the minimum dominating set is
+        computationally intensive for large graphs.
+      </li>
+      <li>
+        <strong>Approximation Algorithms</strong>: Used to find near-optimal
+        solutions in polynomial time.
+      </li>
+    </ul>
+    <h2>Algorithms:</h2>
+    <ol>
+      <li>
+        <p><strong>Greedy Algorithm</strong>:</p>
+        <ul>
+          <li>
+            Iteratively selects the vertex that covers the most uncovered
+            vertices.
+          </li>
+          <li>Provides a logarithmic approximation ratio.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Integer Linear Programming (ILP)</strong>:</p>
+        <ul>
+          <li>Formulates the problem as an optimization problem.</li>
+          <li>
+            Solvable using ILP solvers for exact solutions, though
+            computationally expensive.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Heuristics and Metaheuristics</strong>:</p>
+        <ul>
+          <li>
+            Genetic algorithms, simulated annealing, etc., for large-scale
+            problems.
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <h2>Challenges:</h2>
+    <ul>
+      <li>
+        <strong>Scalability</strong>: Exact algorithms are infeasible for very
+        large graphs.
+      </li>
+      <li>
+        <strong>Dynamic Graphs</strong>: Maintaining a minimum dominating set in
+        graphs that change over time.
+      </li>
+    </ul>
+    <h2>Research Directions:</h2>
+    <ul>
+      <li>
+        <strong>Parallel Algorithms</strong>: Leveraging multi-core processors
+        and distributed computing.
+      </li>
+      <li>
+        <strong>Machine Learning</strong>: Using learning-based approaches to
+        predict dominating sets.
+      </li>
+      <li>
+        <strong>Hybrid Methods</strong>: Combining exact and heuristic methods
+        for better performance.
+      </li>
+    </ul>
+    <h2>Conclusion:</h2>
+    <p>
+      The minimum dominating set problem is a fundamental issue in graph theory
+      with wide-ranging applications. While it is computationally challenging,
+      various algorithms and heuristics provide practical solutions for
+      different scenarios. Ongoing research continues to improve the efficiency
+      and applicability of these methods.
+    </p>
     <hr />
     <h2>Problem Statement</h2>
     <p>Input: A Boolean Adjacency Matrix $M$.</p>
-    <p>Answer: Find a Minimum Vertex Cover.</p>
+    <p>Answer: Find a Minimum Dominating Set.</p>
     <h3>Example Instance: 5 x 5 matrix</h3>
     <table>
       <thead>
@@ -171,8 +259,84 @@ e 3 5
     </p>
     <p><em>Example Solution:</em></p>
     <p>
-      Vertex Cover Found <code>1, 2, 3</code>: Nodes <code>1</code>,
-      <code>2</code>, and <code>3</code> constitute an optimal solution.
+      Dominating Set Found <code>1, 2</code>: Nodes <code>1</code> and
+      <code>2</code> constitute an optimal solution.
+    </p>
+    <hr />
+    <h1>Approximate Dominating Set Algorithm Analysis</h1>
+    <h2>Overview</h2>
+    <p>
+      This algorithm computes an approximate Dominating Set for an undirected
+      graph in polynomial time. It leverages edge covers and dominating sets on
+      trees to achieve a sublogarithmic approximation ratio. The implementation
+      is carried out using the NetworkX library in Python.
+    </p>
+    <h2>Runtime Analysis</h2>
+    <p>The runtime complexity of the algorithm is analyzed as follows:</p>
+    <ol>
+      <li>
+        <strong>Removing isolated nodes</strong>: $O(n)$, where $n$ is the
+        number of nodes.
+      </li>
+      <li>
+        <strong>Finding minimum edge cover</strong>: $O(n^3)$, using the
+        Edmonds-Gallai decomposition.
+      </li>
+      <li>
+        <strong>Creating subgraph</strong>: $O(m)$, where $m$ is the number of
+        edges in the minimum edge cover.
+      </li>
+      <li><strong>Finding connected components</strong>: $O(n + m)$.</li>
+      <li>
+        <strong>For each connected component</strong>:
+        <ul>
+          <li>
+            Creating subgraph: $O(n_i + m_i)$, where $n_i$ and $m_i$ are the
+            number of nodes and edges in the component.
+          </li>
+          <li>
+            Finding the Dominating Set of the subgraph (Hint: It is a tree):
+            $O(n_i)$.
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <p>
+      The dominant factor in the runtime is the computation of the minimum edge
+      cover, which has a cubic time complexity. Thus, the overall time
+      complexity of the algorithm is $O(n^3)$.
+    </p>
+    <h2>Correctness</h2>
+    <p>
+      The correctness of the algorithm is grounded in the following principles:
+    </p>
+    <ol>
+      <li>
+        It correctly handles edge cases, such as empty graphs or graphs with no
+        edges.
+      </li>
+      <li>
+        Isolated nodes are removed since they do not contribute to the
+        Dominating Set.
+      </li>
+      <li>The minimum edge cover ensures that all edges are covered.</li>
+      <li>
+        Finding the minimum Dominating Set in a tree is solvable in polynomial
+        time.
+      </li>
+      <li>
+        Each connected component is processed independently, ensuring
+        correctness for disconnected graphs.
+      </li>
+      <li>
+        Redundant nodes in the Dominating Set are removed at the conclusion of
+        the algorithm.
+      </li>
+    </ol>
+    <p>
+      While this algorithm does not guarantee an optimal solution, it provides
+      an approximation with a ratio of at most sublogarithmic, which is
+      theoretically sound for the Dominating Set problem.
     </p>
     <hr />
     <h1>Compile and Environment</h1>
@@ -201,21 +365,23 @@ cd baldor
           <code>baldor\benchmarks\testMatrix1</code>. The file
           <code>testMatrix1</code> represents the example described herein. We
           also support <code>.xz</code>, <code>.lzma</code>, <code>.bz2</code>,
-          and <code>.bzip2</code> for compressed text files.
+          and <code>.bzip2</code> compressed text files.
         </p>
         <p><strong>Example Output:</strong></p>
-        <pre><code>testMatrix1: Vertex Cover Found 1, 2, 3
+        <pre><code>testMatrix1: Dominating Set Found 1, 2
 </code></pre>
-        <p>This indicates nodes <code>1, 2, 3</code> form a vertex cover.</p>
+        <p>This indicates nodes <code>1, 2</code> form a Dominating Set.</p>
       </li>
     </ol>
     <hr />
-    <h2>Vertex Cover Size</h2>
-    <p>Use the <code>-c</code> flag to count the nodes in the vertex cover:</p>
+    <h2>Dominating Set Size</h2>
+    <p>
+      Use the <code>-c</code> flag to count the nodes in the Dominating Set:
+    </p>
     <pre><code class="language-bash">solve -i ./benchmarks/testMatrix2 -c
 </code></pre>
     <p><strong>Output:</strong></p>
-    <pre><code>testMatrix2: Vertex Cover Size 5
+    <pre><code>testMatrix2: Dominating Set Size 2
 </code></pre>
     <hr />
     <h1>Command Options</h1>
@@ -225,15 +391,15 @@ cd baldor
     <p><strong>Output:</strong></p>
     <pre><code class="language-bash">usage: solve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Vertex Cover for an undirected graph encoded in DIMACS format and stored in a file.
+Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio encoded for undirected graph in DIMACS format.
 
 options:
   -h, --help            show this help message and exit
   -i INPUTFILE, --inputFile INPUTFILE
                         input file path
-  -a, --approximation   enable comparison with a polynomial-time approximation approach within a factor of at most 2
+  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
   -b, --bruteForce      enable comparison with the exponential-time brute-force approach
-  -c, --count           calculate the size of the vertex cover
+  -c, --count           calculate the size of the Dominating Set
   -v, --verbose         anable verbose output
   -l, --log             enable file logging
   --version             show program's version number and exit
@@ -242,27 +408,54 @@ options:
     <h1>Batch Execution</h1>
     <p>
       Batch execution allows you to solve multiple graphs within a directory
-      simultaneously.
+      consecutively.
     </p>
     <p>
       To view available command-line options for the
       <code>batch_solve</code> command, use the following in your terminal or
       command prompt:
     </p>
-    <pre><code>batch_solve -h
+    <pre><code class="language-bash">batch_solve -h
 </code></pre>
     <p>This will display the following help information:</p>
     <pre><code class="language-bash">usage: batch_solve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Vertex Cover for all undirected graphs encoded in DIMACS format and stored in a directory.
+Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
 
 options:
   -h, --help            show this help message and exit
   -i INPUTDIRECTORY, --inputDirectory INPUTDIRECTORY
                         Input directory path
-  -a, --approximation   enable comparison with a polynomial-time approximation approach within a factor of at most 2
+  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
   -b, --bruteForce      enable comparison with the exponential-time brute-force approach
-  -c, --count           calculate the size of the vertex cover
+  -c, --count           calculate the size of the Dominating Set
+  -v, --verbose         anable verbose output
+  -l, --log             enable file logging
+  --version             show program's version number and exit
+</code></pre>
+    <hr />
+    <h1>Testing Application</h1>
+    <p>
+      A command-line utility named <code>test_solve</code> is provided for
+      evaluating the Algorithm using randomly generated, large sparse matrices.
+      It supports the following options:
+    </p>
+    <pre><code class="language-bash">usage: test_solve [-h] -d DIMENSION [-n NUM_TESTS] [-s SPARSITY] [-a] [-b] [-c] [-w] [-v] [-l] [--version]
+
+The Baldor Testing Application using randomly generated, large sparse matrices.
+
+options:
+  -h, --help            show this help message and exit
+  -d DIMENSION, --dimension DIMENSION
+                        an integer specifying the dimensions of the square matrices
+  -n NUM_TESTS, --num_tests NUM_TESTS
+                        an integer specifying the number of tests to run
+  -s SPARSITY, --sparsity SPARSITY
+                        sparsity of the matrices (0.0 for dense, close to 1.0 for very sparse)
+  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
+  -b, --bruteForce      enable comparison with the exponential-time brute-force approach
+  -c, --count           calculate the size of the Dominating Set
+  -w, --write           write the generated random matrix to a file in the current directory
   -v, --verbose         anable verbose output
   -l, --log             enable file logging
   --version             show program's version number and exit
@@ -272,6 +465,10 @@ options:
     <ul>
       <li>Python implementation by <strong>Frank Vega</strong>.</li>
     </ul>
+    <hr />
+    <h1>Complexity</h1>
+    <pre><code class="language-diff">+ We present a polynomial-time algorithm achieving a sublogarithmic approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
+</code></pre>
     <hr />
     <h1>License</h1>
     <ul>

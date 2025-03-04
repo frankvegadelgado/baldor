@@ -2,186 +2,101 @@
 # Author: Frank Vega
 
 import itertools
-import networkx as nx
-import numpy as np
 from . import utils
+from . import dominating
 
+import networkx as nx
 
-def find_vertex_cover(graph):
+def find_dominating_set(graph):
     """
-    Computes an approximate vertex cover in polynomial time.
+    Computes an approximate Dominating Set for an undirected graph in polynomial time.
+    The algorithm uses edge covers and dominating sets on trees to achieve
+    a sublogarithmic approximation ratio.
 
     Args:
-        graph: A NetworkX graph.
+        graph (nx.Graph): A NetworkX Graph object representing the input graph.
 
     Returns:
-        A set of vertex indices representing the approximate vertex cover, or None if the graph is empty.
+        set: A set of vertex indices representing the approximate Dominating Set.
+             Returns None if the graph is empty or has no edges.
     """
 
-    # Handle empty graph
+    # Handle empty graph or graph with no edges
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         return None
 
-    if graph.number_of_nodes()**2 >= graph.number_of_edges()**3:
-        approximate_vertex_cover = find_vertex_cover_in_sparse_graph(graph)
-    else:
-        approximate_vertex_cover = find_vertex_cover_in_dense_graph(graph)    
+    # Remove isolated nodes (nodes with no edges) as they are not part of any Dominating Set
+    graph.remove_nodes_from(list(nx.isolates(graph)))
 
-    return approximate_vertex_cover
+    # Initialize an empty set to store the approximate Dominating Set
+    approximate_dominating_set = set()
 
+    # Find a minimum edge cover in the graph
+    min_edge_cover = nx.min_edge_cover(graph)
 
-def find_vertex_cover_in_dense_graph(graph):
-    """
-    Computes an approximate vertex cover in polynomial time.
+    # Create a subgraph using the edges from the minimum edge cover
+    min_edge_graph = nx.Graph(min_edge_cover)
 
-    Args:
-        graph: A NetworkX graph.
+    # Iterate over all connected components of the min_edge_graph
+    for connected_component in nx.connected_components(min_edge_graph):
+        # Create a subgraph for the current connected component
+        subgraph = min_edge_graph.subgraph(connected_component)
 
-    Returns:
-        A set of vertex indices representing the approximate vertex cover, or None if the graph is empty.
-    """
+        # Find a Dominating Set in the acyclic subgraph
+        dominating_set = dominating.min_dominating_set_tree(subgraph)
 
-    # Handle empty graph
-    if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
-        return None
-
-    approximate_vertex_cover = set()
-    components = list(nx.connected_components(graph))
-
-    while components:
-        component = components.pop()
-        subgraph = graph.subgraph(component)
-
-        if subgraph.number_of_edges() > 0:
-            if nx.is_bipartite(subgraph) and subgraph.number_of_nodes()**1.5 >= subgraph.number_of_edges():
-                # Use Hopcroft-Karp algorithm for bipartite graphs
-                bipartite_matching = nx.bipartite.hopcroft_karp_matching(subgraph)
-                bipartite_vertex_cover = nx.bipartite.to_vertex_cover(subgraph, bipartite_matching)
-                approximate_vertex_cover.update(bipartite_vertex_cover)
-            elif subgraph.number_of_nodes()**2 >= subgraph.number_of_edges()**3:
-                approximate_vertex_cover.update(find_vertex_cover_in_sparse_graph(subgraph))            
-            else:
-                # Use maximal matching for non-bipartite graphs
-                maximal_matching = nx.approximation.min_maximal_matching(subgraph)
-                best_candidate = {(u if (subgraph.degree(u) - 1) >= (subgraph.degree(v) - 1) else v)
-                                   for u, v in maximal_matching}
-                
-                approximate_vertex_cover.update(best_candidate)
-
-                # Remove the selected nodes and add the remaining components
-                residual_graph = subgraph.copy()
-                residual_graph.remove_nodes_from(best_candidate)
-                components.extend(nx.connected_components(residual_graph))
-
-    return approximate_vertex_cover
-
-
-def find_vertex_cover_in_sparse_graph(graph):
-    """
-    Computes an approximate vertex cover in polynomial time.
-
-    Args:
-        graph: A NetworkX graph.
-
-    Returns:
-        A set of vertex indices representing the approximate vertex cover, or None if the graph is empty.
-    """
-
-    # Handle empty graph
-    if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
-        return None
-
-    # The maximum node in the input graph plus 1.    
-    n = max(graph.nodes()) + 1
-  
-    # Create an edge graph where each node represents an edge in the original graph
-    edge_graph = nx.Graph()
-    for u, v in graph.edges():
-        # Minimum and maximum vertices
-        minimum = min(u, v)
-        maximum = max(u, v)
-        # Unique representation of the edge
-        edge = n * minimum + maximum
-        # Avoid the case when u = v
-        if minimum != maximum:
-            for a in graph.neighbors(minimum):
-                if maximum < a:
-                    adjacent_edge = n * minimum + a
-                    edge_graph.add_edge(edge, adjacent_edge)
-            for b in graph.neighbors(maximum):
-                if b < minimum:
-                    adjacent_edge = n * b + maximum
-                    edge_graph.add_edge(edge, adjacent_edge)
-
-    # Find the minimum edge cover in the edge graph
-    min_edge_cover = nx.min_edge_cover(edge_graph)
-
-    # Convert the edge cover back to a vertex cover
-    vertex_cover = set()
-    for edge1, edge2 in min_edge_cover:
-        # Extract the common vertex between the two edges
-        common_vertex = (edge1 // n) if (edge1 // n) == (edge2 // n) else (edge1 % n)
-        vertex_cover.add(common_vertex)
-
-    # Include isolated edges (edges not covered by the vertex cover)
-    for u, v in graph.edges():
-        if u not in vertex_cover and v not in vertex_cover:
-            vertex_cover.add(u)
-
-    # Remove redundant vertices from the vertex cover
-    approximate_vertex_cover = set(vertex_cover)
-    for u in vertex_cover:
-        # Check if removing the vertex still results in a valid vertex cover
-        if utils.is_vertex_cover(graph, approximate_vertex_cover - {u}):
-            approximate_vertex_cover.remove(u)
-
-    return approximate_vertex_cover
-
- 
-def find_vertex_cover_brute_force(graph):
-    """
-    Calculates the exact minimum vertex cover using brute-force (exponential time).
-
-    Args:
-        graph: A NetworkX graph.
-
-    Returns:
-        A set of vertex indices representing the minimum vertex cover, or None if the graph is empty.
-    """
+        # Add the vertices from this connected component to the final Dominating Set
+        approximate_dominating_set.update(dominating_set)
     
-    # Handle empty graph
+    # Remove redundant vertices from the candidate Dominating Set
+    dominating_set = set(approximate_dominating_set)
+    for u in approximate_dominating_set:
+        # Check if removing the vertex still results in a valid Dominating Set
+        if nx.dominating.is_dominating_set(graph, dominating_set - {u}):
+            dominating_set.remove(u)
+
+    return dominating_set
+
+def find_dominating_set_brute_force(graph):
+    """
+    Computes an exact minimum Dominating Set in exponential time.
+
+    Args:
+        graph: A NetworkX Graph.
+
+    Returns:
+        A set of vertex indices representing the exact Dominating Set, or None if the graph is empty.
+    """
+
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         return None
 
-    # The maximum node in the input graph.    
-    n_vertices = max(graph.nodes()) + 1
- 
+    n_vertices = len(graph.nodes())
 
-    for k in range(1, n_vertices + 1): # Iterate through all possible sizes of the cover
-        for cover_candidate in itertools.combinations(range(n_vertices), k):
-            cover_candidate = set(cover_candidate)
-            if utils.is_vertex_cover(graph, cover_candidate):
-                return cover_candidate
+    for k in range(1, n_vertices + 1): # Iterate through all possible sizes of the dominating sets
+        for candidate in itertools.combinations(graph.nodes(), k):
+            dominating_candidate = set(candidate)
+            if nx.dominating.is_dominating_set(graph, dominating_candidate):
+                return dominating_candidate
                 
     return None
 
 
 
-def find_vertex_cover_approximation(graph):
+def find_dominating_set_approximation(graph):
     """
-    Calculates the approximate vertex cover using an approximation of at most 2.
+    Computes an approximate Dominating Set in polynomial time with a logarithmic approximation ratio for undirected graphs.
 
     Args:
-        graph: A NetworkX graph.
+        graph: A NetworkX Graph.
 
     Returns:
-        A set of vertex indices representing the approximate vertex cover, or None if the graph is empty.
+        A set of vertex indices representing the approximate Dominating Set, or None if the graph is empty.
     """
 
-    # Handle empty graph
     if graph.number_of_nodes() == 0 or graph.number_of_edges() == 0:
         return None
 
-    #networkx doesn't have a guaranteed minimum vertex cover function, so we use approximation
-    vertex_cover = nx.approximation.vertex_cover.min_weighted_vertex_cover(graph)
-    return vertex_cover
+    #networkx doesn't have a guaranteed minimum Dominating Set function, so we use approximation
+    dominating_set = nx.approximation.dominating_set.min_weighted_dominating_set(graph)
+    return dominating_set

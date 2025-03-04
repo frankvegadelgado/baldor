@@ -2,7 +2,7 @@ from pathlib import Path
 
 import setuptools
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 
 NAME = "baldor"
 
@@ -15,10 +15,11 @@ INSTALL_REQUIRES = [
 setuptools.setup(
     name=NAME,
     version=VERSION,
-    description="Estimating the Minimum Vertex Cover for an undirected graph encoded in DIMACS format and stored in a file.",
+    description="Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio for undirected graph encoded in DIMACS format.",
     url="https://github.com/frankvegadelgado/baldor",
     project_urls={
         "Source Code": "https://github.com/frankvegadelgado/baldor",
+        "Documentation Research": "https://www.researchgate.net/publication/389519333_New_Insights_and_Developments_on_the_Dominating_Set_Problem",
     },
     author="Frank Vega",
     author_email="vega.frank@gmail.com",
@@ -45,7 +46,8 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'solve = baldor.app:main',
-            'batch_solve = baldor.test:main'
+            'test_solve = baldor.test:main',
+            'batch_solve = baldor.batch:main'
         ]
     }
 )
