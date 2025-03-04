@@ -20,7 +20,7 @@ def approximate_solution(inputFile, verbose=False, log=False, count=False, brute
         log: Enable file logging.
         count: Measure the size of the Dominating Set.
         bruteForce: Enable brute force approach.
-        approximation: Enable an approximate approach within a ratio of at most logarithmic.
+        approximation: Enable an approximate approach within a logarithmic factor.
     """
     
     logger = applogger.Logger(applogger.FileLogger() if (log) else applogger.ConsoleLogger(verbose))
@@ -70,7 +70,7 @@ def approximate_solution(inputFile, verbose=False, log=False, count=False, brute
         if bruteForce:    
             output = f"Exact Ratio (Baldor/Optimal): {len(novel_result)/len(brute_force_result)}"
         elif approximation:
-            output = f"Upper Bound for Ratio (Baldor/Optimal): {(math.log(len(approximate_result))) * len(novel_result)/len(approximate_result)}"
+            output = f"Upper Bound for Ratio (Baldor/Optimal): {(math.log(graph.number_of_nodes())) * len(novel_result)/len(approximate_result)}"
         utils.println(output, logger, log)
           
 def main():
@@ -83,7 +83,7 @@ def main():
     helper.add_argument('-c', '--count', action='store_true', help='calculate the size of the Dominating Set')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.4')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.0.5')
     
     # Initialize the parameters
     args = helper.parse_args()

@@ -126,7 +126,8 @@ The runtime complexity of the algorithm is analyzed as follows:
 4. **Finding connected components**: $O(n + m)$.
 5. **For each connected component**:
    - Creating subgraph: $O(n_i + m_i)$, where $n_i$ and $m_i$ are the number of nodes and edges in the component.
-   - Finding the Dominating Set of the subgraph (Hint: It is a tree): $O(n_i)$.
+   - Finding the Dominating Set of the subgraph (_Hint_: It is a tree): $O(n_i)$.
+6. **Remove redundant nodes**: $O(n \cdot m)$.
 
 The dominant factor in the runtime is the computation of the minimum edge cover, which has a cubic time complexity. Thus, the overall time complexity of the algorithm is $O(n^3)$.
 

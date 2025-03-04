@@ -4,7 +4,7 @@
 import time
 import argparse
 import math
-
+import networkx as nx
 
 from . import algorithm
 from . import applogger
@@ -34,7 +34,7 @@ def main():
     helper.add_argument('-w', '--write', action='store_true', help='write the generated random matrix to a file in the current directory')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.4')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.0.5')
     
     # Initialize the parameters
     args = helper.parse_args()
@@ -56,7 +56,7 @@ def main():
         if sparse_matrix is None:
             continue
 
-        graph = utils.sparse_matrix_to_graph(sparse_matrix)    
+        graph = nx.from_scipy_sparse_array(sparse_matrix) 
         logger.info(f"Matrix shape: {sparse_matrix.shape}")
         logger.info(f"Number of non-zero elements: {sparse_matrix.nnz}")
         logger.info(f"Sparsity: {1 - (sparse_matrix.nnz / (sparse_matrix.shape[0] * sparse_matrix.shape[1]))}")
@@ -101,7 +101,7 @@ def main():
             if bruteForce:    
                 output = f"Exact Ratio (Baldor/Optimal): {len(novel_result)/len(brute_force_result)}"
             elif approximation:
-                output = f"Upper Bound for Ratio (Baldor/Optimal): {(math.log(len(approximate_result))) * len(novel_result)/len(approximate_result)}"
+                output = f"Upper Bound for Ratio (Baldor/Optimal): {(math.log(graph.number_of_nodes())) * len(novel_result)/len(approximate_result)}"
             utils.println(output, logger, args.log)
         
 

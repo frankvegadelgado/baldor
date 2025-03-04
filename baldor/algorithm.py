@@ -2,7 +2,6 @@
 # Author: Frank Vega
 
 import itertools
-from . import utils
 from . import dominating
 
 import networkx as nx
