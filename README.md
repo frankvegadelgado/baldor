@@ -175,7 +175,7 @@ The runtime of the algorithm is dominated by the following steps:
 The overall runtime of the algorithm is:
 $$O\left(|V|^3 + |V| \cdot |E|\right)$$
 which simplifies as
-$$O\left(|V|^3)$$
+$$O\left(|V|^3\right)$$
 for **dense** and **sparse** graphs.
 
 ## Key Features
