@@ -263,82 +263,157 @@ e 3 5
       <code>2</code> constitute an optimal solution.
     </p>
     <hr />
-    <h1>Approximate Dominating Set Algorithm Analysis</h1>
-    <h2>Overview</h2>
+    <h1>Overview of the Dominating Set Algorithm</h1>
+    <h2>Algorithm Description</h2>
     <p>
-      This algorithm computes an approximate Dominating Set for an undirected
-      graph in polynomial time. It leverages edge covers and dominating sets on
-      trees to achieve a sublogarithmic approximation ratio. The implementation
-      is carried out using the NetworkX library in Python.
+      The algorithm computes an approximate Dominating Set for an undirected
+      graph $G = (V, E)$ in polynomial time. It achieves a
+      <strong>sublogarithmic-approximation ratio</strong>, meaning the size of
+      the computed dominating set is at most sublogarithmic times the size of
+      the optimal solution. The algorithm consists of the following steps:
     </p>
-    <h2>Runtime Analysis</h2>
-    <p>The runtime complexity of the algorithm is analyzed as follows:</p>
     <ol>
       <li>
-        <strong>Removing isolated nodes</strong>: $O(n)$, where $n$ is the
-        number of nodes.
-      </li>
-      <li>
-        <strong>Finding minimum edge cover</strong>: $O(n^3)$, using the
-        Edmonds-Gallai decomposition.
-      </li>
-      <li>
-        <strong>Creating subgraph</strong>: $O(m)$, where $m$ is the number of
-        edges in the minimum edge cover.
-      </li>
-      <li><strong>Finding connected components</strong>: $O(n + m)$.</li>
-      <li>
-        <strong>For each connected component</strong>:
+        <p><strong>Remove Isolated Nodes</strong>:</p>
         <ul>
           <li>
-            Creating subgraph: $O(n_i + m_i)$, where $n_i$ and $m_i$ are the
-            number of nodes and edges in the component.
+            Isolated nodes (nodes with no edges) are removed because they must
+            be included in any dominating set.
           </li>
           <li>
-            Finding the Dominating Set of the subgraph (<em>Hint</em>: It is a
-            tree): $O(n_i)$.
+            If the graph becomes empty after this step, the algorithm returns an
+            empty set.
           </li>
         </ul>
       </li>
-      <li><strong>Remove redundant nodes</strong>: $O(n \cdot m)$.</li>
+      <li>
+        <p><strong>Compute a Minimum Edge Cover</strong>:</p>
+        <ul>
+          <li>
+            A minimum edge cover is a set of edges such that every vertex in the
+            graph is incident to at least one edge in the cover.
+          </li>
+          <li>
+            This step ensures that all vertices are &quot;covered&quot; by
+            edges, which is crucial for constructing the dominating set.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Construct a Subgraph from the Edge Cover</strong>:</p>
+        <ul>
+          <li>
+            A subgraph is created using the edges from the minimum edge cover.
+          </li>
+          <li>
+            This subgraph is a forest (a collection of trees), as the minimum
+            edge cover in a graph without isolated nodes is a union of disjoint
+            stars or trees.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Find Dominating Sets for Connected Components</strong>:</p>
+        <ul>
+          <li>
+            The subgraph is decomposed into connected components, each of which
+            is a tree.
+          </li>
+          <li>
+            For each tree component, an optimal dominating set is computed using
+            a tree-based algorithm.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Combine Dominating Sets</strong>:</p>
+        <ul>
+          <li>
+            The dominating sets for all connected components are combined into a
+            single candidate dominating set.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Remove Redundant Vertices</strong>:</p>
+        <ul>
+          <li>
+            Redundant vertices (vertices whose removal does not invalidate the
+            dominating set) are removed to ensure minimality.
+          </li>
+        </ul>
+      </li>
     </ol>
-    <p>
-      The dominant factor in the runtime is the computation of the minimum edge
-      cover, which has a cubic time complexity. Thus, the overall time
-      complexity of the algorithm is $O(n^3)$.
-    </p>
-    <h2>Correctness</h2>
-    <p>
-      The correctness of the algorithm is grounded in the following principles:
-    </p>
+    <h2>Runtime Analysis</h2>
+    <p>The runtime of the algorithm is dominated by the following steps:</p>
     <ol>
       <li>
-        It correctly handles edge cases, such as empty graphs or graphs with no
-        edges.
+        <p><strong>Remove Isolated Nodes</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|V|)$.</li>
+        </ul>
       </li>
       <li>
-        Isolated nodes are removed since they do not contribute to the
-        Dominating Set.
-      </li>
-      <li>The minimum edge cover ensures that all edges are covered.</li>
-      <li>
-        Finding the minimum Dominating Set in a tree is solvable in polynomial
-        time.
+        <p><strong>Compute a Minimum Edge Cover</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|V|^3)$.</li>
+        </ul>
       </li>
       <li>
-        Each connected component is processed independently, ensuring
-        correctness for disconnected graphs.
+        <p><strong>Construct a Subgraph from the Edge Cover</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|E|)$.</li>
+        </ul>
       </li>
       <li>
-        Redundant nodes in the Dominating Set are removed at the conclusion of
-        the algorithm.
+        <p><strong>Find Dominating Sets for Connected Components</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|V| + |E|)$.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Combine Dominating Sets</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|V|)$.</li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Remove Redundant Vertices</strong>:</p>
+        <ul>
+          <li>Complexity: $O(|V| \cdot |E|)$.</li>
+        </ul>
       </li>
     </ol>
+    <h3>Overall Runtime</h3>
     <p>
-      While this algorithm does not guarantee an optimal solution, it provides
-      an approximation with a ratio of at most sublogarithmic, which is
-      theoretically sound for the Dominating Set problem.
+      The overall runtime of the algorithm is: $$O\left(|V|^3 + |V| \cdot
+      |E|\right)$$ which simplifies as $$O\left(|V|^3)$$ for
+      <strong>dense</strong> and <strong>sparse</strong> graphs.
     </p>
+    <h2>Key Features</h2>
+    <ul>
+      <li>
+        <strong>Approximation Ratio</strong>: The algorithm achieves a
+        <strong>sublogarithmic-approximation ratio</strong>, meaning the size of
+        the computed dominating set is at most sublogarithmic times the size of
+        the optimal solution.
+      </li>
+      <li>
+        <strong>Efficiency</strong>: The algorithm runs in polynomial time,
+        making it suitable for large-scale graphs.
+      </li>
+      <li>
+        <strong>Theoretical Guarantees</strong>: The correctness and
+        approximation ratio are rigorously proven.
+      </li>
+    </ul>
+    <h2>Applications</h2>
+    <p>The algorithm is applicable in various domains, including:</p>
+    <ul>
+      <li>Network design and optimization.</li>
+      <li>Social network analysis.</li>
+      <li>Resource allocation in distributed systems.</li>
+    </ul>
     <hr />
     <h1>Compile and Environment</h1>
     <h2>Prerequisites</h2>
@@ -392,7 +467,7 @@ cd baldor
     <p><strong>Output:</strong></p>
     <pre><code class="language-bash">usage: solve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio encoded for undirected graph in DIMACS format.
+Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio encoded for undirected graph in DIMACS format.
 
 options:
   -h, --help            show this help message and exit
@@ -421,7 +496,7 @@ options:
     <p>This will display the following help information:</p>
     <pre><code class="language-bash">usage: batch_solve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
+Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
 
 options:
   -h, --help            show this help message and exit
@@ -468,7 +543,7 @@ options:
     </ul>
     <hr />
     <h1>Complexity</h1>
-    <pre><code class="language-diff">+ We present a polynomial-time algorithm achieving a sublogarithmic approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
+    <pre><code class="language-diff">+ We present a polynomial-time algorithm achieving a sublogarithmic-approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
 </code></pre>
     <hr />
     <h1>License</h1>

@@ -29,14 +29,14 @@ def approximate_solutions(inputDirectory, verbose=False, log=False, count=False,
 def main():
     
     # Define the parameters
-    helper = argparse.ArgumentParser(prog="batch_solve", description="Estimating the Minimum Dominating Set with a sublogarithmic approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.")
+    helper = argparse.ArgumentParser(prog="batch_solve", description="Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.")
     helper.add_argument('-i', '--inputDirectory', type=str, help='Input directory path', required=True)
     helper.add_argument('-a', '--approximation', action='store_true', help='enable comparison with another polynomial-time approximation approach within a logarithmic factor')
     helper.add_argument('-b', '--bruteForce', action='store_true', help='enable comparison with the exponential-time brute-force approach')
     helper.add_argument('-c', '--count', action='store_true', help='calculate the size of the Dominating Set')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.5')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.0.6')
 
     
     # Initialize the parameters
