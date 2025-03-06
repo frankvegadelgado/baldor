@@ -106,91 +106,58 @@ where the fields W and V specify the endpoints of the edge while the lower-case 
 
 _Example Solution:_
 
-Dominating Set Found `1, 2`: Nodes `1` and `2` constitute an optimal solution.
+Dominating Set Found `3, 4`: Nodes `3` and `4` constitute an optimal solution.
 
----
+# Approximate Dominating Set Algorithm Overview
 
-# Overview of the Dominating Set Algorithm
+## Input
 
-## Algorithm Description
+- An undirected graph G = (V, E) represented as a NetworkX Graph object
 
-The algorithm computes an approximate Dominating Set for an undirected graph $G = (V, E)$ in polynomial time. It achieves a **sublogarithmic-approximation ratio**, meaning the size of the computed dominating set is at most sublogarithmic times the size of the optimal solution. The algorithm consists of the following steps:
+## Steps
 
-1. **Remove Isolated Nodes**:
+1. **Validation**
 
-   - Isolated nodes (nodes with no edges) are removed because they must be included in any dominating set.
-   - If the graph becomes empty after this step, the algorithm returns an empty set.
+   - Ensure the input is a NetworkX Graph object
+   - Verify the graph is undirected
+   - Check if the graph is empty or has no edges
 
-2. **Compute a Minimum Edge Cover**:
+2. **Preprocessing**
 
-   - A minimum edge cover is a set of edges such that every vertex in the graph is incident to at least one edge in the cover.
-   - This step ensures that all vertices are "covered" by edges, which is crucial for constructing the dominating set.
+   - Remove isolated nodes (nodes with degree 0): $O(n)$
+   - If the graph becomes empty after removal, return an empty set
 
-3. **Construct a Subgraph from the Edge Cover**:
+3. **Compute Approximate Minimum Maximal Matching**
 
-   - A subgraph is created using the edges from the minimum edge cover.
-   - This subgraph is a forest (a collection of trees), as the minimum edge cover in a graph without isolated nodes is a union of disjoint stars or trees.
+   - Use NetworkX's `approximation.min_maximal_matching(G)` function
+   - This step has a time complexity of $O(m)$
 
-4. **Find Dominating Sets for Connected Components**:
+4. **Generate Dominating Set**
 
-   - The subgraph is decomposed into connected components, each of which is a tree.
-   - For each tree component, an optimal dominating set is computed using a tree-based algorithm.
+   - Create a set of all nodes involved in the matching
 
-5. **Combine Dominating Sets**:
+5. **Remove Redundant Vertices**
 
-   - The dominating sets for all connected components are combined into a single candidate dominating set.
+   - Convert the final dominating set into a minimal dominating set. This step ensures that no redundant vertices are included, and it can be performed in $O(n \cdot (n + m))$ time.
 
-6. **Remove Redundant Vertices**:
-   - Redundant vertices (vertices whose removal does not invalidate the dominating set) are removed to ensure minimality.
+6. **Return Result**
+   - Return the approximate dominating set
 
-## Runtime Analysis
+## Output
 
-The runtime of the algorithm is dominated by the following steps:
+- A set of vertex indices representing the approximate Dominating Set
 
-1. **Remove Isolated Nodes**:
+## Time Complexity
 
-   - Complexity: $O(|V|)$.
+- Overall: $O(n \cdot (n + m))$, where $n$ is the number of nodes and $m$ is the number of edges
 
-2. **Compute a Minimum Edge Cover**:
+## Space Complexity
 
-   - Complexity: $O(|V|^3)$.
+- $O(n + m)$ for storing the graph and the resulting set
 
-3. **Construct a Subgraph from the Edge Cover**:
+## Approximation Guarantee
 
-   - Complexity: $O(|E|)$.
-
-4. **Find Dominating Sets for Connected Components**:
-
-   - Complexity: $O(|V| + |E|)$.
-
-5. **Combine Dominating Sets**:
-
-   - Complexity: $O(|V|)$.
-
-6. **Remove Redundant Vertices**:
-   - Complexity: $O(|V| \cdot |E|)$.
-
-### Overall Runtime
-
-The overall runtime of the algorithm is:
-$$O\left(|V|^3 + |V| \cdot |E|\right)$$
-which simplifies as
-$$O\left(|V|^3\right)$$
-for **dense** and **sparse** graphs.
-
-## Key Features
-
-- **Approximation Ratio**: The algorithm achieves a **sublogarithmic-approximation ratio**, meaning the size of the computed dominating set is at most sublogarithmic times the size of the optimal solution.
-- **Efficiency**: The algorithm runs in polynomial time, making it suitable for large-scale graphs.
-- **Theoretical Guarantees**: The correctness and approximation ratio are rigorously proven.
-
-## Applications
-
-The algorithm is applicable in various domains, including:
-
-- Network design and optimization.
-- Social network analysis.
-- Resource allocation in distributed systems.
+- 8-approximation of the minimum dominating set
 
 ---
 
@@ -226,10 +193,10 @@ pip install baldor
    **Example Output:**
 
    ```
-   testMatrix1: Dominating Set Found 1, 2
+   testMatrix1: Dominating Set Found 3, 4
    ```
 
-   This indicates nodes `1, 2` form a Dominating Set.
+   This indicates nodes `3, 4` form a Dominating Set.
 
 ---
 
@@ -262,7 +229,7 @@ solve -h
 ```bash
 usage: solve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio encoded for undirected graph in DIMACS format.
+Estimating the Minimum Dominating Set with a 8-approximation ratio encoded for undirected graph in DIMACS format.
 
 options:
   -h, --help            show this help message and exit
@@ -293,7 +260,7 @@ This will display the following help information:
 ```bash
 usage: batch_solve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
+Estimating the Minimum Dominating Set with a 8-approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
 
 options:
   -h, --help            show this help message and exit
@@ -346,7 +313,7 @@ options:
 # Complexity
 
 ```diff
-+ We present a polynomial-time algorithm achieving a sublogarithmic-approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
++ We present a polynomial-time algorithm achieving a 8-approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
 ```
 
 ---

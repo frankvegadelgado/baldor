@@ -2,7 +2,7 @@ from pathlib import Path
 
 import setuptools
 
-VERSION = "0.0.7"
+VERSION = "0.0.8"
 
 NAME = "baldor"
 
@@ -15,7 +15,7 @@ INSTALL_REQUIRES = [
 setuptools.setup(
     name=NAME,
     version=VERSION,
-    description="Estimating the Minimum Dominating Set with a sublogarithmic-approximation ratio for undirected graph encoded in DIMACS format.",
+    description="Estimating the Minimum Dominating Set with a 8-approximation ratio for undirected graph encoded in DIMACS format.",
     url="https://github.com/frankvegadelgado/baldor",
     project_urls={
         "Source Code": "https://github.com/frankvegadelgado/baldor",

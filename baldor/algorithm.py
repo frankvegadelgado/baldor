@@ -4,80 +4,6 @@
 import itertools
 import networkx as nx
 
-def min_dominating_set_tree(tree):
-    """
-    Find the minimum dominating set in a tree using dynamic programming.
-    
-    Parameters:
-    tree (nx.Graph): A NetworkX graph that is a tree
-    
-    Returns:
-    set: A minimum dominating set of the tree
-    """
-    # Check if the input is actually a tree
-    if not nx.is_tree(tree):
-        raise ValueError("Input graph is not a tree")
-    
-    # If the tree is empty, return an empty set
-    if tree.number_of_nodes() == 0:
-        return set()
-    
-    # If the tree has only one node, return that node
-    if tree.number_of_nodes() == 1:
-        return set(tree.nodes())
-    
-    # Choose an arbitrary root for the tree
-    root = next(iter(tree.nodes()))
-    
-    # Create a directed tree from the undirected tree
-    # This helps in identifying parent-child relationships
-    directed_tree = nx.bfs_tree(tree, root)
-    
-    # Initialize DP tables
-    # dp_include[node] = size of min dominating set of subtree rooted at node if node is included
-    # dp_exclude[node] = size of min dominating set of subtree rooted at node if node is excluded
-    dp_include = {}
-    dp_exclude = {}
-    
-    # Store the actual vertices in the dominating set
-    vertices_include = {}
-    vertices_exclude = {}
-    
-    # Process nodes in post-order (from leaves to root)
-    for node in reversed(list(nx.dfs_preorder_nodes(directed_tree, root))):
-        children = list(directed_tree.successors(node))
-        
-        # Case 1: Node is included in the dominating set
-        dp_include[node] = 1  # Count the node itself
-        vertices_include[node] = {node}
-        
-        # Add the minimum dominating sets for each child's subtree
-        for child in children:
-            # If node is included, we can either include or exclude each child
-            if dp_include[child] <= dp_exclude[child]:
-                dp_include[node] += dp_include[child]
-                vertices_include[node].update(vertices_include[child])
-            else:
-                dp_include[node] += dp_exclude[child]
-                vertices_include[node].update(vertices_exclude[child])
-        
-        # Case 2: Node is excluded from the dominating set
-        dp_exclude[node] = 0
-        vertices_exclude[node] = set()
-        
-        # If node is excluded, all its children must be included or adjacent to included nodes
-        for child in children:
-            # Child must be included since parent (node) is excluded
-            dp_exclude[node] += dp_include[child]
-            vertices_exclude[node].update(vertices_include[child])
-    
-    # Return the minimum dominating set
-    if dp_include[root] <= dp_exclude[root]:
-        return vertices_include[root]
-    else:
-        return vertices_exclude[root]
-
-
 def find_dominating_set(graph: nx.Graph):
     """
     Computes an approximate Dominating Set for an undirected graph in polynomial time.
@@ -108,27 +34,12 @@ def find_dominating_set(graph: nx.Graph):
     if graph.number_of_nodes() == 0:
         return set()
     
-    # Find a minimum edge cover in the graph
-    min_edge_cover = nx.min_edge_cover(graph)
-    
-    # Create a subgraph using the edges from the minimum edge cover
-    min_edge_graph = nx.Graph(min_edge_cover)
-    
-    # Initialize a set to store the approximate Dominating Set
-    dominating_set = set()
-    
-    # Iterate over all connected components of the min_edge_graph
-    for component in nx.connected_components(min_edge_graph):
-        # Create a subgraph for the current connected component
-        subgraph = min_edge_graph.subgraph(component)
-        
-        # Find a Dominating Set in the acyclic subgraph
-        # Use the tree-based minimum dominating set algorithm 
-        component_dominating_set = min_dominating_set_tree(subgraph)
-        
-        # Add the vertices from this connected component to the final Dominating Set
-        dominating_set.update(component_dominating_set)
-    
+    # Compute approximate minimum maximal matching (2-approximation)
+    edges = nx.approximation.min_maximal_matching(graph)
+
+    # Create a set of nodes from the edges
+    dominating_set = {node for edge in edges for node in edge}
+
     # Remove redundant vertices from the candidate Dominating Set
     for vertex in list(dominating_set):  # Use list to avoid modifying the set during iteration
         if nx.dominating.is_dominating_set(graph, dominating_set - {vertex}):
