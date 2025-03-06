@@ -308,7 +308,7 @@ e 3 5
           <li>
             Convert the final dominating set into a minimal dominating set. This
             step ensures that no redundant vertices are included, and it can be
-            performed in $O(n \cdot (n + m))$ time.
+            performed in $O(n^{2} \cdot (n + m))$ time.
           </li>
         </ul>
       </li>
@@ -328,13 +328,9 @@ e 3 5
     <h2>Time Complexity</h2>
     <ul>
       <li>
-        Overall: $O(n \cdot (n + m))$, where $n$ is the number of nodes and $m$
-        is the number of edges
+        Overall: $O(n^{2} \cdot (n + m))$, where $n$ is the number of nodes and
+        $m$ is the number of edges
       </li>
-    </ul>
-    <h2>Space Complexity</h2>
-    <ul>
-      <li>$O(n + m)$ for storing the graph and the resulting set</li>
     </ul>
     <h2>Approximation Guarantee</h2>
     <ul>

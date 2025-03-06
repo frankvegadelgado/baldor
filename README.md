@@ -138,7 +138,7 @@ Dominating Set Found `3, 4`: Nodes `3` and `4` constitute an optimal solution.
 
 5. **Remove Redundant Vertices**
 
-   - Convert the final dominating set into a minimal dominating set. This step ensures that no redundant vertices are included, and it can be performed in $O(n \cdot (n + m))$ time.
+   - Convert the final dominating set into a minimal dominating set. This step ensures that no redundant vertices are included, and it can be performed in $O(n^{2} \cdot (n + m))$ time.
 
 6. **Return Result**
    - Return the approximate dominating set
@@ -149,11 +149,7 @@ Dominating Set Found `3, 4`: Nodes `3` and `4` constitute an optimal solution.
 
 ## Time Complexity
 
-- Overall: $O(n \cdot (n + m))$, where $n$ is the number of nodes and $m$ is the number of edges
-
-## Space Complexity
-
-- $O(n + m)$ for storing the graph and the resulting set
+- Overall: $O(n^{2} \cdot (n + m))$, where $n$ is the number of nodes and $m$ is the number of edges
 
 ## Approximation Guarantee
 

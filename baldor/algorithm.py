@@ -41,10 +41,14 @@ def find_dominating_set(graph: nx.Graph):
     dominating_set = {node for edge in edges for node in edge}
 
     # Remove redundant vertices from the candidate Dominating Set
-    for vertex in list(dominating_set):  # Use list to avoid modifying the set during iteration
-        if nx.dominating.is_dominating_set(graph, dominating_set - {vertex}):
-            dominating_set.remove(vertex)
-
+    changed = True
+    while changed:
+        changed = False
+        for vertex in list(dominating_set):
+            if nx.is_dominating_set(graph, dominating_set - {vertex}):
+                dominating_set.remove(vertex)
+                changed = True
+    
     return dominating_set
 
 def find_dominating_set_brute_force(graph):
