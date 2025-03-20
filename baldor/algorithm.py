@@ -38,17 +38,18 @@ def find_dominating_set(graph):
     # Create a new graph to transform the original into a chordal graph structure
     chordal_graph = nx.Graph()
 
+    # Dominance per vertex
+    dominance = {i: frozenset(list(graph.neighbors(i)) + [i]) for i in graph.nodes()}
+
     # Add edges to create a chordal structure
     # This ensures the dominating set in the chordal graph corresponds to one in the original graph
     for i in graph.nodes():
-        dominance_i = frozenset(list(graph.neighbors(i)) + [i])
-        chordal_graph.add_edge((i, i), (i, dominance_i))
+        chordal_graph.add_edge((i, i), (i, dominance[i]))
         for j in graph.neighbors(i):
             if i < j:
                 # Create tuple nodes in the chordal graph
-                dominance_j = frozenset(list(graph.neighbors(j)) + [j])
-                chordal_graph.add_edge((j, j), (i, dominance_i))
-                chordal_graph.add_edge((i, i), (j, dominance_j))
+                chordal_graph.add_edge((j, j), (i, dominance[i]))
+                chordal_graph.add_edge((i, i), (j, dominance[j]))
 
     # Add edges to ensure chordality by forming a clique among (i, i) nodes
     for i in graph.nodes():
