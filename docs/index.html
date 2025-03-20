@@ -42,8 +42,8 @@
     <p>
       This work builds upon
       <a
-        href="https://www.researchgate.net/publication/389519333_New_Insights_and_Developments_on_the_Dominating_Set_Problem"
-        >New Insights and Developments on the Dominating Set Problem</a
+        href="https://dev.to/frank_vega_987689489099bf/polynomial-time-algorithm-for-mds-p-np-1ln6"
+        >Polynomial-Time Algorithm for MDS (P = NP)</a
       >.
     </p>
     <hr />
@@ -259,83 +259,9 @@ e 3 5
     </p>
     <p><em>Example Solution:</em></p>
     <p>
-      Dominating Set Found <code>3, 4</code>: Nodes <code>3</code> and
-      <code>4</code> constitute an optimal solution.
+      Dominating Set Found <code>2, 5</code>: Nodes <code>2</code> and
+      <code>5</code> constitute an optimal solution.
     </p>
-    <h1>Approximate Dominating Set Algorithm Overview</h1>
-    <h2>Input</h2>
-    <ul>
-      <li>
-        An undirected graph G = (V, E) represented as a NetworkX Graph object
-      </li>
-    </ul>
-    <h2>Steps</h2>
-    <ol>
-      <li>
-        <p><strong>Validation</strong></p>
-        <ul>
-          <li>Ensure the input is a NetworkX Graph object</li>
-          <li>Verify the graph is undirected</li>
-          <li>Check if the graph is empty or has no edges</li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Preprocessing</strong></p>
-        <ul>
-          <li>Remove isolated nodes (nodes with degree 0): $O(n)$</li>
-          <li>If the graph becomes empty after removal, return an empty set</li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Compute Approximate Minimum Maximal Matching</strong></p>
-        <ul>
-          <li>
-            Use NetworkX's
-            <code>approximation.min_maximal_matching(G)</code> function
-          </li>
-          <li>This step has a time complexity of $O(m)$</li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Generate Dominating Set</strong></p>
-        <ul>
-          <li>Create a set of all nodes involved in the matching</li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Remove Redundant Vertices</strong></p>
-        <ul>
-          <li>
-            Convert the final dominating set into a minimal dominating set. This
-            step ensures that no redundant vertices are included, and it can be
-            performed in $O(n^{2} \cdot (n + m))$ time.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Return Result</strong></p>
-        <ul>
-          <li>Return the approximate dominating set</li>
-        </ul>
-      </li>
-    </ol>
-    <h2>Output</h2>
-    <ul>
-      <li>
-        A set of vertex indices representing the approximate Dominating Set
-      </li>
-    </ul>
-    <h2>Time Complexity</h2>
-    <ul>
-      <li>
-        Overall: $O(n^{2} \cdot (n + m))$, where $n$ is the number of nodes and
-        $m$ is the number of edges
-      </li>
-    </ul>
-    <h2>Approximation Guarantee</h2>
-    <ul>
-      <li>8-approximation of the minimum dominating set</li>
-    </ul>
     <hr />
     <h1>Compile and Environment</h1>
     <h2>Prerequisites</h2>
@@ -366,9 +292,9 @@ cd baldor
           and <code>.bzip2</code> compressed text files.
         </p>
         <p><strong>Example Output:</strong></p>
-        <pre><code>testMatrix1: Dominating Set Found 3, 4
+        <pre><code>testMatrix1: Dominating Set Found 2, 5
 </code></pre>
-        <p>This indicates nodes <code>3, 4</code> form a Dominating Set.</p>
+        <p>This indicates nodes <code>2, 5</code> form a Dominating Set.</p>
       </li>
     </ol>
     <hr />
@@ -389,13 +315,13 @@ cd baldor
     <p><strong>Output:</strong></p>
     <pre><code class="language-bash">usage: solve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a 8-approximation ratio encoded for undirected graph in DIMACS format.
+Solve the Minimum Dominating Set for undirected graph encoded in DIMACS format.
 
 options:
   -h, --help            show this help message and exit
   -i INPUTFILE, --inputFile INPUTFILE
                         input file path
-  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
+  -a, --approximation   enable comparison with a polynomial-time approximation approach within a logarithmic factor
   -b, --bruteForce      enable comparison with the exponential-time brute-force approach
   -c, --count           calculate the size of the Dominating Set
   -v, --verbose         anable verbose output
@@ -418,13 +344,13 @@ options:
     <p>This will display the following help information:</p>
     <pre><code class="language-bash">usage: batch_solve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
 
-Estimating the Minimum Dominating Set with a 8-approximation ratio for all undirected graphs encoded in DIMACS format and stored in a directory.
+Solve the Minimum Dominating Set for all undirected graphs encoded in DIMACS format and stored in a directory.
 
 options:
   -h, --help            show this help message and exit
   -i INPUTDIRECTORY, --inputDirectory INPUTDIRECTORY
                         Input directory path
-  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
+  -a, --approximation   enable comparison with a polynomial-time approximation approach within a logarithmic factor
   -b, --bruteForce      enable comparison with the exponential-time brute-force approach
   -c, --count           calculate the size of the Dominating Set
   -v, --verbose         anable verbose output
@@ -450,7 +376,7 @@ options:
                         an integer specifying the number of tests to run
   -s SPARSITY, --sparsity SPARSITY
                         sparsity of the matrices (0.0 for dense, close to 1.0 for very sparse)
-  -a, --approximation   enable comparison with another polynomial-time approximation approach within a logarithmic factor
+  -a, --approximation   enable comparison with a polynomial-time approximation approach within a logarithmic factor
   -b, --bruteForce      enable comparison with the exponential-time brute-force approach
   -c, --count           calculate the size of the Dominating Set
   -w, --write           write the generated random matrix to a file in the current directory
@@ -465,7 +391,7 @@ options:
     </ul>
     <hr />
     <h1>Complexity</h1>
-    <pre><code class="language-diff">+ We present a polynomial-time algorithm achieving a 8-approximation factor for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
+    <pre><code class="language-diff">+ We present a polynomial-time algorithm for MDS, providing strong evidence that P = NP by efficiently solving a computationally hard problem with optimal solutions.
 </code></pre>
     <hr />
     <h1>License</h1>

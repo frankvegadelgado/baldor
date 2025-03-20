@@ -56,12 +56,12 @@ def approximate_solution(inputFile, verbose=False, log=False, count=False, brute
         output = f"{filename}: (Brute Force) {answer}"
         utils.println(output, logger, log)
         
-    logger.info("Our Solution with a 8-approximation ratio started")
+    logger.info("Our Algorithm with an exact solution started")
     started = time.time()
     
     novel_result = algorithm.find_dominating_set(graph)
 
-    logger.info(f"Our Solution with a 8-approximation ratio done in: {(time.time() - started) * 1000.0} milliseconds")
+    logger.info(f"Our Algorithm with an exact solution done in: {(time.time() - started) * 1000.0} milliseconds")
 
     answer = utils.string_result_format(novel_result, count)
     output = f"{filename}: {answer}"
@@ -76,14 +76,14 @@ def approximate_solution(inputFile, verbose=False, log=False, count=False, brute
 def main():
     
     # Define the parameters
-    helper = argparse.ArgumentParser(prog="solve", description='Estimating the Minimum Dominating Set with a 8-approximation ratio for undirected graph encoded in DIMACS format.')
+    helper = argparse.ArgumentParser(prog="solve", description='Solve the Minimum Dominating Set for undirected graph encoded in DIMACS format.')
     helper.add_argument('-i', '--inputFile', type=str, help='input file path', required=True)
-    helper.add_argument('-a', '--approximation', action='store_true', help='enable comparison with another polynomial-time approximation approach within a logarithmic factor')
+    helper.add_argument('-a', '--approximation', action='store_true', help='enable comparison with a polynomial-time approximation approach within a logarithmic factor')
     helper.add_argument('-b', '--bruteForce', action='store_true', help='enable comparison with the exponential-time brute-force approach')
     helper.add_argument('-c', '--count', action='store_true', help='calculate the size of the Dominating Set')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.9')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.1.0')
     
     # Initialize the parameters
     args = helper.parse_args()

@@ -151,11 +151,11 @@ def random_matrix_tests(matrix_shape, sparsity=0.9):
 
 def string_result_format(result, count_result=False):
   """
-  Returns a string indicating the Dominating Set.
+  Returns a string indicating the dominating set.
   
   Args:
-    result: None if the graph is empty, the Dominating Set otherwise.
-    count_result: Count the number of nodes in the Dominating Set (default is False).
+    result: None if the graph is empty, the dominating set otherwise.
+    count_result: Count the number of nodes in the dominating set (default is False).
 
   Returns:
     - "Empty Graph" if result is None, "Dominating Set Found a, b, c, ...." otherwise.
@@ -164,7 +164,7 @@ def string_result_format(result, count_result=False):
     if count_result:
         return f"Dominating Set Size {len(result)}"
     else:
-        formatted_string = f'{", ".join(f"{x}" for x in result)}'
+        formatted_string = f'{", ".join(f"{x + 1}" for x in result)}'
         return f"Dominating Set Found {formatted_string}"
   else:
      return "Empty Graph"
@@ -197,7 +197,46 @@ def sparse_matrix_to_graph(adj_matrix, is_directed=False):
     else:
         graph = nx.Graph()
         for i, j in zip(rows, cols):
-            if not graph.has_edge(i, j) and not graph.has_edge(j, i): # Avoid duplicates in undirected graphs
+            if i < j: # Avoid duplicates in undirected graphs
                 graph.add_edge(i, j)
     
     return graph
+
+def is_vertex_redundant(graph, vertex, vertex_set):
+    """
+    Check if a vertex does not cover any edge that a set of vertices does not already cover.
+
+    Parameters:
+    - graph: A NetworkX graph.
+    - vertex: The vertex to check.
+    - vertex_set: A set of vertices.
+
+    Returns:
+    - True if the vertex does not cover any additional edge, False otherwise.
+    """
+    # Get all edges covered by the vertex set
+    edges_covered_by_set = set()
+    for v in vertex_set:
+        edges_covered_by_set.update(graph.edges(v))
+
+    # Get all edges covered by the vertex
+    edges_covered_by_vertex = set(graph.edges(vertex))
+
+    # Check if the edges covered by the vertex are a subset of the edges covered by the set
+    return edges_covered_by_vertex.issubset(edges_covered_by_set)
+
+def is_vertex_cover(graph, vertex_cover):
+    """
+    Verifies if a given set of vertices is a valid vertex cover for the graph.
+
+    Args:
+        graph (nx.Graph): The input graph.
+        vertex_cover (set): A set of vertices to check.
+
+    Returns:
+        bool: True if the set is a valid vertex cover, False otherwise.
+    """
+    for u, v in graph.edges():
+        if u not in vertex_cover and v not in vertex_cover:
+            return False
+    return True
