@@ -2,7 +2,6 @@
 # Author: Frank Vega
 
 import itertools
-from . import utils
 
 import networkx as nx
 
@@ -23,12 +22,12 @@ def find_dominating_set(graph):
         dominating_set = set()
         # Track which vertices in the bipartite graph are dominated
         dominated = {v: False for v in G.nodes()}
-        # Sort vertices by degree (ascending) to prioritize low-degree nodes for greedy selection
-        undominated = sorted(list(G.nodes()), key=lambda x: len(list(G.neighbors(x))))
+        # Sort vertices by degree (ascending) to prioritize high-degree nodes for greedy selection
+        undominated = sorted(list(G.nodes()), key=lambda x: G.degree(x))
         
         # Continue processing until all vertices are dominated
         while undominated:
-            # Pop the next vertex to process (starting with lowest degree)
+            # Pop the next vertex to process (starting with highest degree)
             v = undominated.pop()
             # Check if the vertex is not yet dominated
             if not dominated[v]:

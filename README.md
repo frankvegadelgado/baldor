@@ -79,15 +79,15 @@ Baldor is an approximate algorithm for the minimum dominating set problem on gen
 ## Runtime
 
 - **Complexity:** The algorithm's runtime is $O(|V| \cdot |E|)$, where $|V|$ is the number of vertices and $|E|$ is the number of edges in $G$. This arises from constructing the bipartite graph $B$ and performing a greedy domination step.
-- **Experimental Performance:** On DIMACS instances:
+- **Experimental Performance:** On _Second DIMACS Implementation Challenge_ instances:
   - Small graphs (e.g., `san200_0.7_1.clq`): 93.572 ms
   - Larger graphs (e.g., `san1000.clq`): 1959.679 ms
-  - The runtime scales with graph size but remains competitive with NetworkX, which is faster on small graphs (e.g., 0.000 ms for `san200_0.9_1.clq`).
+  - The runtime scales with graph size but remains competitive with NetworkX, which is faster on small graphs.
 
 ## Correctness
 
 - **Approximation Guarantee:** Baldor achieves a 2-approximation for the minimum dominating set. This is proven by bounding $|D_u| \leq 2$ for each vertex $u$, where $D_u$ is the set of vertices in $S$ dominating $(u, 0)$ and $(u, 1)$ in $B$. The bipartite construction and greedy selection ensure all vertices are dominated.
-- **Experimental Validation:** The approximation quality metric often approaches 2, confirming near-optimal performance. On `san1000.clq`, Baldor yields a set of size 4 versus NetworkX’s 40, with a metric of 0.690776, indicating significant improvement.
+- **Experimental Validation:** The approximation quality metric often approaches 2, confirming near-optimal performance. On `san1000.clq`, Baldor yields a set of size 4 versus NetworkX’s 40, indicating significant improvement.
 
 ---
 

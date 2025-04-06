@@ -196,14 +196,14 @@
         performing a greedy domination step.
       </li>
       <li>
-        <strong>Experimental Performance:</strong> On DIMACS instances:
+        <strong>Experimental Performance:</strong> On
+        <em>Second DIMACS Implementation Challenge</em> instances:
         <ul>
           <li>Small graphs (e.g., <code>san200_0.7_1.clq</code>): 93.572 ms</li>
           <li>Larger graphs (e.g., <code>san1000.clq</code>): 1959.679 ms</li>
           <li>
             The runtime scales with graph size but remains competitive with
-            NetworkX, which is faster on small graphs (e.g., 0.000 ms for
-            <code>san200_0.9_1.clq</code>).
+            NetworkX, which is faster on small graphs.
           </li>
         </ul>
       </li>
@@ -221,8 +221,7 @@
         <strong>Experimental Validation:</strong> The approximation quality
         metric often approaches 2, confirming near-optimal performance. On
         <code>san1000.clq</code>, Baldor yields a set of size 4 versus
-        NetworkX’s 40, with a metric of 0.690776, indicating significant
-        improvement.
+        NetworkX’s 40, indicating significant improvement.
       </li>
     </ul>
     <hr />
