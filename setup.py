@@ -2,25 +2,24 @@ from pathlib import Path
 
 import setuptools
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 NAME = "baldor"
 
 INSTALL_REQUIRES = [
     "numpy>=2.2.1",
     "scipy>=1.15.0",
-    "networkx[default]>=3.4.2",
-    "ortools>=9.12.4544"
+    "networkx[default]>=3.4.2"
 ]
 
 setuptools.setup(
     name=NAME,
     version=VERSION,
-    description="Solve the Minimum Dominating Set for undirected graph encoded in DIMACS format.",
+    description="Solve the Approximate Minimum Dominating Set for undirected graph encoded in DIMACS format.",
     url="https://github.com/frankvegadelgado/baldor",
     project_urls={
         "Source Code": "https://github.com/frankvegadelgado/baldor",
-        "Documentation Research": "https://dev.to/frank_vega_987689489099bf/polynomial-time-algorithm-for-mds-p-np-1ln6",
+        "Documentation Research": "https://dev.to/frank_vega_987689489099bf/bipartite-based-2-approximation-for-dominating-sets-in-general-graphs-l5g",
     },
     author="Frank Vega",
     author_email="vega.frank@gmail.com",
